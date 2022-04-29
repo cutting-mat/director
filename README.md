@@ -1,38 +1,39 @@
-English | [中文](README_CN.md)
+中文 | [English](README.md)
 
 # @cutting-mat/director
 
 [![npm](https://img.shields.io/npm/v/@cutting-mat/director.svg)](https://www.npmjs.com/package/@cutting-mat/director) [![license](https://img.shields.io/github/license/cutting-mat/director.svg)]()
 
-Simpler Vue3.x state management plugin. If you also find Vuex a bit complicated, then you need `director`.
+更简单的 Vue3.x 状态管理插件。如果你也觉得 Vuex 有点复杂，那么你需要 `director`。
 
-[Vue2 version](https://github.com/cutting-mat/director/tree/vue2.x)
+[Vue2 版](https://github.com/cutting-mat/director/tree/vue2.x)
 
-## Quick start
+## 快速开始
 
-1. Install:
+1. 安装:
 
 ```bash
 npm i @cutting-mat/director --save
 ```
 
-2. Configure Store
+2. 配置 Store
 
 ```js
 import { plugin as store } from "@cutting-mat/director";
 
 Vue.use(store, {
   state: {
-    // Data in store
-    testValue: null,
+    // 注册状态数据
+    testValue: 0,
   },
   actions: {
-    // Asynchronous operation
+    // 注册自定义操作
     testAction: function (context) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          context.set("testValue", parseInt(context.get("testValue") + 1));
-          resolve();
+          let newValue = parseInt(context.get("testValue") + 1);
+          context.set("testValue", newValue);
+          resolve(newValue);
         }, 500);
       });
     },
@@ -40,45 +41,45 @@ Vue.use(store, {
 });
 ```
 
-There may be many data items in the actual project. You can put the configuration in a separate file:
+实际项目中数据项可能会很多，可以将配置放在独立文件中：
 
 ```js
-// recommend
+// 推荐
 import { plugin as store } from "@cutting-mat/director";
 import storeConfig from "@/store.config";
 Vue.use(store, storeConfig);
 ```
 
-3. Use
+3. 使用
 
-The plug-in will automatically register the global `$store` object. Now, you can use `$store.state` or `$store.get()` to get the status object.
+插件将注册 `$store` 实例方法。现在，你可以通过 `this.$store.state` 或 `this.$store.get()` 来获取状态对象。
 
-The following statements are equivalent:
+以下语句等效：
 
 ```js
 this.$store.state.testValue; // 0
 this.$store.get("testValue"); // 0
 ```
 
-Use `$store.set()` assign value to status.
+用 `$store.set()` 为状态赋值。
 
 ```js
 this.$store.set("testValue", parseInt(Math.random() * 1e8)); // 0.5405537846956767
 ```
 
-You can also assign a value to the state directly, but make sure the key is registered in advance, otherwise the data is not responsive.
+你也可以直接对状态赋值，但要确保 key 要预先注册，否则数据不具备响应性。
 
 ```js
 this.$store.state.testValue = 123; // 123
 
 this.$store.state.testValue++; // 124
 
-this.$store.state.unRegisteredKey = 456; // Unregistered status is not responsive
+this.$store.state.unRegisteredKey = 456; // 未注册的数据不具备响应性
 ```
 
-`$store.set()` will intercept and prompt unregistered assignment operations, so it is recommended to always use `$store.set()` assignment.
+`$store.set()` 会拦截并提示未注册的赋值操作，因此建议始终用 `$store.set()` 赋值。
 
-Use `$store.action()` execute custom operation.
+通过 `$store.action()` 执行自定义操作。
 
 ```js
 this.$store.action('testAction').then(newValue = {
@@ -89,66 +90,66 @@ this.$store.action('testAction').then(newValue = {
 
 ## API
 
-### Configuration
+### 配置选项
 
 - state
 
-Type: Object | Function
+类型: Object | Function
 
-If you pass in a function that returns an object, the object returned will be used as state.
+如果你传入返回一个对象的函数，其返回的对象会被用作 state。
 
 - actions
 
-Type: { [type: string]: Function }
+类型: { [type: string]: Function }
 
-Register on the action store. The handler function always accepts context as the first parameter and payload as the second parameter (optional).
+在 store 上注册 action。处理函数总是接受 context 作为第一个参数，payload 作为第二个参数（可选）。
 
-`context` Object contains the following properties：
+`context` 对象包含以下属性：
 
 ```js
 {
-  set, // Equivalent to `store.set`
-    get; // Equivalent to `store.get`
+  set, // 等同于 `store.set`
+    get; // 等同于 `store.get`
 }
 ```
 
-At the same time, if there is the second parameter payload, it can also be received. Payload is a parameter carried when distributing actions.
+同时如果有第二个参数 payload 的话也能够接收。payload 是分发 action 时携带的参数。
 
-### Store attribute
+### Store 属性
 
 - state
 
-Type: Object
+类型: Object
 
-Status object. All statuses need to be pre registered.
+状态对象。所有状态要预先注册。
 
-### Store method
+### Store 方法
 
 - set(key[String], value[Any])
 
-Updating the status and assigning a value to an unregistered key will throw an error.
+更新状态，对未注册的 key 赋值将抛出错误。
 
-Return Promise 。
+返回 Promise 。
 
 - get(key[String])
 
-Get status. And $store.state[key] is equivalent, and an error will be thrown for the value of unregistered key.
+获取状态，与 $store.state[key] 等效，对未注册的 key 取值将抛出错误。
 
-Return status value。
+返回 状态值 。
 
 - action(type[String], payload[Any])
 
-Distribute action. Action needs to be pre-registered in config.actions. Payload is the parameter passed to the operation method.
+分发 action 。即执行自定义操作，action 需要预先在 config.actions 中注册。payload 是向操作方法传递的参数。
 
-Return Promise 。If the action handler returns a Promise, `store.action()` will return the Promise of the handler directly.
+返回 Promise 。如果 action 处理函数返回的是 Promise，`store.action()` 会直接返回处理函数的 Promise 。
 
-## Automatic mode
+## 自动模式
 
-Action is most often used to obtain asynchronous data and store it in state. For this scenario, `director` supports a simpler automatic mode。
+action 最常被用来获取异步数据并存入 state，对于这种场景`director`支持一种更简单的自动模式。
 
-When the type of action has a state with the same name in state and the processing function returns a promise, the return value of promise will be automatically assigned to the state with the same name in state.
+当 action 的 type 在 state 中有同名状态，且处理函数返回一个 Promise 时，Promise 的返回值将自动赋值给 state 中的同名状态。
 
-Examples：
+示例：
 
 ```js
 export default {
@@ -158,7 +159,7 @@ export default {
   actions: {
     AsynData: function (context, payload) {
       return getAsynData(payload).then((res) => {
-        // You can format the returned data here, and the returned value will be automatically stored in state.AsynData
+        // 这里可以对返回数据做格式化操作，返回值将自动存入 state.AsynData
         return res.data;
       });
     },
@@ -166,11 +167,11 @@ export default {
 };
 ```
 
-## Request cache
+## 请求缓存
 
-When some public data is requested using action and stored in state, which means that the data will be called and requested frequently within the application, request caching can be easily implemented with [@cutting-mat/axios](https://github.com/cutting-mat/axios/blob/main/README_CN.md).
+当使用 action 请求的是某些公共数据并存入 state 时，这意味着该数据会在应用内被频繁的调用并发起请求，这时可以配合[@cutting-mat/axios](https://github.com/cutting-mat/axios/blob/main/README_CN.md)轻松实现请求缓存。
 
-Examples：
+实例：
 
 ```js
 export default {
@@ -190,24 +191,22 @@ export default {
 
 ```
 
-## Responsive
+## 响应式应用
 
-The state data in $store.state is responsive。
+`$store.state` 中的数据是响应式的。
 
 ```html
 <template>
   <div>
-    <div>
-      Responsive Data：testValue = {{ tes$store.state.testValuetValue }}
-    </div>
-    <button @click.native="$store.state.testValue++">Change data</button>
+    <div>响应式数据：testValue = {{ $store.state.testValue }}</div>
+    <button @click.native="$store.state.testValue++">改变数据</button>
   </div> </template
 >>
 ```
 
-## Plug-in use
+## 插件式使用
 
-It can be used independently from the Vue application environment, for example, when developing plug-ins.
+可以脱离 Vue 应用环境独立使用，比如在开发插件时。
 
 ```js
 import Store from "@cutting-mat/director";

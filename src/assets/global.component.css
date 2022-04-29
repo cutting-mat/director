@@ -176,3 +176,7 @@
     white-space  : nowrap;
     text-overflow: ellipsis;
 }
+
+.tc{
+    text-align: center;
+}

@@ -26,10 +26,11 @@
   },
   "devDependencies": {
     "@element-plus/icons-vue": "^1.1.4",
-    "element-plus": "^2.1.9",
     "@vitejs/plugin-vue": "2.3.1",
+    "element-plus": "^2.1.9",
     "vite": "^2.9.5",
-    "vue": "^3.2.33"
+    "vue": "^3.2.33",
+    "vue-router": "^4.0.14"
   },
   "repository": {
     "type": "git",

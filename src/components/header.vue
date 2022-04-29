@@ -1,6 +1,6 @@
 <template>
   <div class="header flex-row align-center">
-    <h1 class="logo">Director</h1>
+    <h1 class="logo" @click="$router.replace('/')">Director</h1>
     <div class="center flex-1">
       <slot> </slot>
     </div>
@@ -30,10 +30,6 @@
 <script>
 export default {
   name: "myHeader",
-  data() {
-    return {};
-  },
-  methods: {},
 };
 </script>
 

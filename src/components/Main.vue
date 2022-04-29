@@ -1,54 +1,102 @@
 <template>
   <div class="flex-1 scrollbar">
-    <div class="wrap">
+    <div class="wrap tc">
       <h1 class="maintitle">Director</h1>
-      <h2 class="subtitle">一个前端自动化控制库</h2>
+      <h2 class="subtitle">
+        前端自动化脚本执行，灵活实现各种自动播放、演示场景
+      </h2>
 
       <div>
         <a
-          href="https://github.com/cutting-mat/director/blob/main/README_CN.md"
+          href="https://github.com/cutting-mat/director/blob/main/README.md"
           target="_blank"
-          class="myBtn"
+          class="bigBtn"
         >
-          <i class="el-icon-magic-stick"></i>
+          <el-icon><magic-stick /></el-icon>
           快速开始
         </a>
       </div>
 
       <h3 class="channeltitle">演示</h3>
-      demo
+      <div class="demoBlock">
+        <el-button
+          type="success"
+          @click="activated ? director.pause() : director.play()"
+        >
+          {{ activated ? "暂停" : "开始" }}
+        </el-button>
+        <el-button type="warning" @click="director.stop()">停止</el-button>
+        <el-button type="danger" @click="director.destroy()">销毁</el-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Store from "../../lib/store.js";
-const $store = Store({
-  state: {
-    inject: 0,
-  },
-});
+import { ElNotification } from "element-plus";
 
 export default {
   data() {
     return {
       loading: false,
+      activated: false,
+      directorIns: null,
     };
   },
-  methods: {},
+  methods: {
+    init() {
+      this.director.loadAction([
+        {
+          action: () => {
+            ElNotification({
+              title: "Step1",
+              message: "成功注册了一个Director实例",
+              type: "success",
+            });
+          },
+        },
+        {
+          action: () => {
+            ElNotification({
+              title: "Step2",
+              message: "接下来即将跳转路由",
+              type: "success",
+            });
+          },
+        },
+        {
+          action: () => {
+            this.$router.push("/Page1");
+          },
+        },
+        {
+          action: () => {
+            ElNotification({
+              title: "Step11",
+              message: "Welcom，你回来了",
+              type: "success",
+            });
+          },
+        },
+      ]);
+
+      this.director.on("update", (activated, stepIndex, length) => {
+        console.log(activated, stepIndex, length);
+        this.activated = activated;
+      });
+    },
+  },
   created() {
-    // setInterval(() => {
-    //   $store.state.inject++;
-    // }, 1000);
+    this.directorIns = this.director;
+    console.log("stepIndex=", this.director.stepIndex);
+    if (!this.director.stepIndex) {
+      this.init();
+    }
   },
 };
 </script>
 
 <style scoped>
-.wrap {
-  width: 1200px;
-  text-align: center;
-}
 .maintitle {
   color: #000;
   font-size: 2.5em;
@@ -65,7 +113,7 @@ export default {
   margin: 40px 0 20px;
   font-weight: normal;
 }
-.myBtn {
+.bigBtn {
   display: inline-block;
   border-radius: 6px;
   padding: 0 24px;
@@ -77,5 +125,9 @@ export default {
   border: 2px solid #3eaf7c;
   transition: background-color 0.1s ease;
   margin: 0 10px;
+}
+
+.demoBlock {
+  padding: 20px 0;
 }
 </style>
