@@ -7,7 +7,6 @@
     "dist",
     "LICENSE",
     "package.json",
-    "README_CN.md",
     "README.md"
   ],
   "main": "./dist/main.umd.js",
