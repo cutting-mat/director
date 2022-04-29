@@ -1,10 +1,12 @@
 <template>
   <div class="flex-1 scrollbar">
-    <h1>Step8: 欢迎来到Page2</h1>
-    <p>本页将演示通过 moveNext / movePrev 手动操作进度</p>
-    <div class="wrap tc demoBlock">
-      <el-button @click="director.movePrev()">上一步</el-button>
-      <el-button @click="director.moveNext()">下一步</el-button>
+    <div class="wrap tc">
+      <h1>Step8: 欢迎来到Page2</h1>
+      <p>本页将演示通过 moveNext / movePrev 手动操作进度</p>
+      <div class="wrap tc demoBlock">
+        <el-button @click="director.movePrev()">上一步</el-button>
+        <el-button @click="director.moveNext()">下一步</el-button>
+      </div>
     </div>
   </div>
 </template>

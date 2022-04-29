@@ -2,7 +2,11 @@
   <div class="flex-col main">
     <myHeader />
     <Main v-if="routePath == '/'" class="flex-1" />
-    <router-view v-else class="flex-1" />
+    <router-view v-slot="{ Component }" v-else class="flex-1">
+      <transition name="fade">
+        <component :is="Component" />
+      </transition>
+    </router-view>
     <myFooter />
   </div>
 </template>

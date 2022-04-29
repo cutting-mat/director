@@ -17,22 +17,32 @@
         </a>
       </div>
 
-      <h3 class="channeltitle">演示</h3>
+      <h3 class="channeltitle">自动示例</h3>
       <div class="demoBlock">
-        <el-button
-          type="success"
-          @click="activated ? director.pause() : director.play()"
-        >
+        <!-- 自动示例 -->
+        <el-button type="success" @click="handlePlay">
           {{ activated ? "暂停" : "开始" }}
+          <span v-if="actionsLength > 0"
+            >({{ stepIndex + 1 }}/{{ actionsLength }})</span
+          >
         </el-button>
-        <el-button type="warning" @click="director.stop()">停止</el-button>
-        <el-button type="danger" @click="director.destroy()">销毁</el-button>
+      </div>
+      <h3 class="channeltitle">手动示例</h3>
+      <div class="demoBlock">
+        <!-- 手动示例 -->
+        <el-button type="warning" @click="ManualIns.movePrev()">
+          上一步
+        </el-button>
+        <el-button type="warning" @click="ManualIns.moveNext()">
+          下一步
+        </el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Director from "../../lib/index.js";
 import { ElNotification } from "element-plus";
 
 export default {
@@ -40,10 +50,18 @@ export default {
     return {
       loading: false,
       activated: false,
-      directorIns: null,
+      stepIndex: 0,
+      actionsLength: 0,
+      ManualIns: null,
     };
   },
   methods: {
+    handlePlay() {
+      if (!this.director.actions) {
+        this.init();
+      }
+      this.activated ? this.director.pause() : this.director.play();
+    },
     init() {
       this.director.loadAction([
         {
@@ -79,19 +97,64 @@ export default {
           },
         },
       ]);
-
-      this.director.on("update", (activated, stepIndex, length) => {
-        console.log(activated, stepIndex, length);
-        this.activated = activated;
-      });
     },
   },
   created() {
-    this.directorIns = this.director;
-    console.log("stepIndex=", this.director.stepIndex);
-    if (!this.director.stepIndex) {
-      this.init();
+    // 自动实例
+    if (this.director.actions) {
+      this.activated = this.director.activated;
+      this.stepIndex = this.director.stepIndex;
+      this.actionsLength = this.director.actions.length;
     }
+    // change事件
+    this.director.off("change");
+    this.director.on("change", (activated, stepIndex) => {
+      console.log("change", stepIndex);
+      this.activated = activated;
+      this.stepIndex = stepIndex;
+      this.actionsLength = this.director.actions.length;
+    });
+    // ended 事件
+    this.director.off("ended");
+    this.director.on("ended", () => {
+      this.director.destroy();
+      this.stepIndex = 0;
+      this.actionsLength = 0;
+    });
+
+    // 手动实例
+    this.ManualIns = new Director({
+      loop: true,
+    });
+    this.ManualIns.loadAction([
+      {
+        action: () => {
+          ElNotification({
+            title: "手动模式3-1",
+            message: "可以在步骤间任意穿梭",
+            type: "success",
+          });
+        },
+      },
+      {
+        action: () => {
+          ElNotification({
+            title: "手动模式3-2",
+            message: "可以在步骤间任意穿梭",
+            type: "success",
+          });
+        },
+      },
+      {
+        action: () => {
+          ElNotification({
+            title: "手动模式3-3",
+            message: "可以在步骤间任意穿梭",
+            type: "success",
+          });
+        },
+      },
+    ]);
   },
 };
 </script>
