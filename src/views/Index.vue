@@ -45,6 +45,7 @@ export default {
 
     internalInstance.appContext.config.globalProperties.director = new Director(
       {
+        autoPlay: true,
         delay: 2000,
       }
     );

@@ -2,10 +2,10 @@
   <div class="flex-1 scrollbar">
     <div class="wrap tc">
       <h1>Step8: 欢迎来到Page2</h1>
-      <p>本页将演示通过 moveNext / movePrev 手动操作进度</p>
+      <p>本页将演示通过 next / prev 手动操作进度</p>
       <div class="wrap tc demoBlock">
-        <el-button @click="director.movePrev()">上一步</el-button>
-        <el-button @click="director.moveNext()">下一步</el-button>
+        <el-button @click="director.prev()">上一步</el-button>
+        <el-button @click="director.next()">下一步</el-button>
       </div>
     </div>
   </div>
@@ -17,7 +17,7 @@ import { ElMessage, ElMessageBox, ElNotification } from "element-plus";
 export default {
   methods: {
     play() {
-      this.director.inertAction([
+      this.director.insert([
         {
           action: () => {
             ElNotification({
@@ -26,7 +26,7 @@ export default {
               type: "success",
             });
           },
-          delay: null,
+          autoPlay: false,
         },
         {
           action: () => {
@@ -36,7 +36,7 @@ export default {
               type: "success",
             });
           },
-          delay: null,
+          autoPlay: false,
         },
         {
           action: () => {

@@ -30,12 +30,8 @@
       <h3 class="channeltitle">手动示例</h3>
       <div class="demoBlock">
         <!-- 手动示例 -->
-        <el-button type="warning" @click="ManualIns.movePrev()">
-          上一步
-        </el-button>
-        <el-button type="warning" @click="ManualIns.moveNext()">
-          下一步
-        </el-button>
+        <el-button type="warning" @click="ManualIns.prev()"> 上一步 </el-button>
+        <el-button type="warning" @click="ManualIns.play()"> 下一步 </el-button>
       </div>
     </div>
   </div>
@@ -63,7 +59,7 @@ export default {
       this.activated ? this.director.pause() : this.director.play();
     },
     init() {
-      this.director.loadAction([
+      this.director.load([
         {
           action: () => {
             ElNotification({
@@ -126,7 +122,7 @@ export default {
     this.ManualIns = new Director({
       loop: true,
     });
-    this.ManualIns.loadAction([
+    this.ManualIns.load([
       {
         action: () => {
           ElNotification({
