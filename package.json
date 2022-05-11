@@ -1,6 +1,6 @@
 {
   "name": "@cutting-mat/director",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A front-end automatic control library",
   "private": false,
   "files": [
